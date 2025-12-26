@@ -1,154 +1,139 @@
-Scalable Document Tagging with Elasticsearch on AWS
-Overview
+# Scalable Document Tagging with Elasticsearch on AWS
 
-This project implements a scalable document tagging and search system using Flask, TF-IDF based NLP, Elasticsearch, and Docker.
-It allows users to upload unstructured text documents, automatically generate topic tags, index them in Elasticsearch, and perform fast full-text search.
+## Overview
 
-The application is containerized using Docker and orchestrated with Docker Compose, making it easy to deploy locally or on cloud platforms like AWS EC2.
+This project implements a scalable document tagging and search system using **Flask**, **TF-IDF based NLP**, **Elasticsearch**, and **Docker**.
 
-Features
+Users can upload unstructured text documents, automatically generate topic tags, index them in Elasticsearch, and perform fast full-text search across documents.
 
-REST API built using Flask
+The application is containerized using Docker and orchestrated with Docker Compose, making it easy to run locally or deploy on AWS EC2.
 
-Automatic document tagging using TF-IDF
+---
 
-Fast indexing and search using Elasticsearch 8.x
+## Features
 
-Full-text search across title, content, and tags
+- REST API built using Flask  
+- Automatic document tagging using TF-IDF  
+- Fast indexing and search using Elasticsearch 8.x  
+- Full-text search across title, content, and tags  
+- Dockerized services with Docker Compose  
+- Robust error handling and service health checks  
 
-Dockerized services with Docker Compose
+---
 
-Robust error handling and service health checks
+## Tech Stack
 
-Tech Stack
+- Python  
+- Flask  
+- scikit-learn (TF-IDF)  
+- Elasticsearch 8.x  
+- Docker  
+- Docker Compose  
+- AWS EC2  
 
-Python
+---
 
-Flask
+## API Endpoints
 
-scikit-learn (TF-IDF)
+### Upload Document
+Uploads a document, generates tags using TF-IDF, and indexes it in Elasticsearch.
 
-Elasticsearch 8.x
-
-Docker & Docker Compose
-
-Project Structure
-scalable-doc-tagging/
-│
-├── app.py                 # Flask application
-├── elastic.py             # Elasticsearch index setup
-├── requirements.txt       # Python dependencies
-├── Dockerfile             # Docker image for Flask app
-├── docker-compose.yml     # Service orchestration
-└── README.md              # Project documentation
-
-API Endpoints
-1. Upload Document
-
+```http
 POST /upload
+```
 
-Request Body (JSON):
-
+#### Request Body
+```json
 {
-  "title": "AI in Healthcare",
-  "content": "Deep learning models are widely used in healthcare."
+  "title": "Test Doc",
+  "content": "This is a test document for tagging."
 }
+```
 
-
-Response:
-
+#### Response
+```json
 {
   "message": "Document indexed successfully",
-  "tags": ["learning", "healthcare", "models", "deep", "used"]
+  "tags": ["document", "tagging", "test"]
 }
+```
 
-2. Search Documents
+---
 
-GET /search?query=<keyword>
+### Search Documents
+Searches documents based on query across title, content, and tags.
 
-Example:
+```http
+GET /search?query=test
+```
 
-/search?query=healthcare
-
-
-Response:
-
+#### Response
+```json
 [
   {
-    "title": "AI in Healthcare",
-    "content": "Deep learning models are widely used in healthcare.",
-    "tags": ["learning", "healthcare", "models", "deep", "used"]
+    "title": "Test Doc",
+    "content": "This is a test document for tagging.",
+    "tags": ["document", "tagging", "test"]
   }
 ]
+```
 
-How It Works
+---
 
-User uploads a document via the /upload endpoint.
+## Running Locally
 
-TF-IDF is used to extract the most relevant keywords as tags.
+### Prerequisites
+- Docker
+- Docker Compose
 
-The document and tags are indexed into Elasticsearch.
-
-Search requests use Elasticsearch Query DSL for reliable full-text search.
-
-Running the Project Locally
-Prerequisites
-
-Docker
-
-Docker Compose
-
-Steps to Run
-
-Clone the repository:
-
-git clone <repository-url>
-cd scalable-doc-tagging
-
-
-Build and start the services:
-
+### Steps
+```bash
 docker-compose up --build
+```
 
+### Access Services
+- Flask API: http://localhost:5000
+- Elasticsearch: http://localhost:9200
 
-Wait for Elasticsearch and Flask services to start.
+---
 
-Testing the API (Windows PowerShell)
-Upload a document
-Invoke-RestMethod -Uri http://127.0.0.1:5000/upload `
--Method POST `
--ContentType "application/json" `
--Body '{"title":"Test Doc","content":"Elasticsearch works well with Docker."}'
+## Deployment on AWS EC2
 
-Search documents
-Invoke-RestMethod -Uri "http://127.0.0.1:5000/search?query=Elasticsearch" `
--Method GET
+### EC2 Configuration
+- Instance Type: `t3.micro`
+- OS: Ubuntu 22.04+
+- Open inbound ports:
+  - `22` → SSH
+  - `5000` → Flask API
+  - `9200` → Elasticsearch
 
-Docker & Deployment Notes
+### Deployment Steps
+```bash
+sudo apt update
+sudo apt install docker docker-compose -y
+git clone <your-repo-url>
+cd scalable-doc-tagging
+docker-compose up -d
+```
 
-Flask communicates with Elasticsearch using Docker service names (elasticsearch:9200)
+---
 
-Elasticsearch runs in single-node mode
+## Screenshots Included
+- Docker containers running
+- Elasticsearch service health
+- Document upload API response
+- Search API response
+- AWS EC2 instance deployment
 
-Flask debug mode and reloader are disabled for container stability
+---
 
-Services are connected using Docker Compose networking
+## Notes
+- Elasticsearch runs in single-node mode.
+- TF-IDF is used for lightweight topic extraction.
+- Can be extended to LDA or transformer-based models.
 
-Future Enhancements
+---
 
-Replace TF-IDF with LDA or transformer-based topic modeling
-
-Add authentication and role-based access
-
-Deploy on AWS EC2 with persistent storage
-
-Add pagination and advanced filtering
-
-Author
-
-Rohit Kumar
-AI / Data Engineering Enthusiast
-
-Conclusion
-
-This project demonstrates practical skills in API development, NLP, Elasticsearch, Docker, and system integration, aligned with real-world AI engineering requirements.
+## Author
+**Rohit Kumar**  
+AI Engineer – Technical Task Submission
